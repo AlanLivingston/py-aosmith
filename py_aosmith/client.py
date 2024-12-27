@@ -1,4 +1,5 @@
 from typing import Any
+from aiohttp.typedefs import StrOrURL
 
 import aiohttp
 import asyncio
@@ -33,7 +34,7 @@ from .queries import (
 )
 
 API_BASE_URL = "https://r2.wh8.co"
-APP_VERSION = "13.0.2"
+APP_VERSION = "13.0.3"
 USER_AGENT = "okhttp/4.9.2"
 
 MAX_RETRIES = 2
@@ -185,11 +186,12 @@ def map_energy_use_data_dict_to_energy_use_data(energy_use_data_dict: dict[str, 
     )
 
 class AOSmithAPIClient:
-    token: str = None
+    token: str | None = None
 
-    def __init__(self, email: str, password: str, session: aiohttp.ClientSession = None):
+    def __init__(self, email: str, password: str, session: aiohttp.ClientSession | None = None, base_url: StrOrURL=API_BASE_URL):
         self.email = email
         self.password = password
+        self.base_url = base_url
 
         if session is None:
             self.session = aiohttp.ClientSession()
@@ -231,7 +233,7 @@ class AOSmithAPIClient:
         try:
             response = await self.session.request(
                 method="POST",
-                url=API_BASE_URL + "/graphql",
+                url=self.base_url + "/graphql",
                 headers=headers,
                 json={
                     "query": query,
