@@ -188,10 +188,10 @@ def map_energy_use_data_dict_to_energy_use_data(energy_use_data_dict: dict[str, 
 class AOSmithAPIClient:
     token: str | None = None
 
-    def __init__(self, email: str, password: str, session: aiohttp.ClientSession | None = None, base_url: StrOrURL=API_BASE_URL):
+    def __init__(self, email: str, password: str, session: aiohttp.ClientSession | None = None, base_url: StrOrURL | None=None):
         self.email = email
         self.password = password
-        self.base_url = base_url
+        self.base_url = API_BASE_URL if base_url is None else base_url
 
         if session is None:
             self.session = aiohttp.ClientSession()
